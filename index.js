@@ -7,6 +7,12 @@
   }
 
   const { CATEGORY_META, GAMES } = data;
+  const HIDDEN_GAME_FILES = new Set([
+    "number_slide_puzzle.html"
+  ]);
+  const visibleSourceGames = GAMES.filter(
+    (game) => !HIDDEN_GAME_FILES.has(game.file)
+  );
   const categoryOrder = ["all", "puzzle", "action", "classic", "casual"];
   const state = {
     keyword: "",
@@ -30,7 +36,7 @@
   }
 
   const allCategories = new Set(["all"]);
-  GAMES.forEach((game) => {
+  visibleSourceGames.forEach((game) => {
     if (game.category) {
       allCategories.add(game.category);
     }
@@ -52,14 +58,14 @@
 
   function categoryCount(key) {
     if (key === "all") {
-      return GAMES.length;
+      return visibleSourceGames.length;
     }
-    return GAMES.filter((game) => game.category === key).length;
+    return visibleSourceGames.filter((game) => game.category === key).length;
   }
 
   function getVisibleGames() {
     const keyword = normalize(state.keyword);
-    return GAMES.filter((game) => {
+    return visibleSourceGames.filter((game) => {
       const byCategory = state.category === "all" || game.category === state.category;
       if (!byCategory) {
         return false;
@@ -69,7 +75,7 @@
         return true;
       }
 
-      const target = normalize(`${game.name} ${game.desc} ${game.file}`);
+      const target = normalize(`${game.name} ${game.desc || ""} ${game.file}`);
       return target.includes(keyword);
     });
   }
@@ -125,7 +131,6 @@
     const icon = document.createElement("div");
     const titleBox = document.createElement("div");
     const title = document.createElement("h3");
-    const file = document.createElement("p");
     const desc = document.createElement("p");
     const foot = document.createElement("div");
     const tag = document.createElement("span");
@@ -145,14 +150,12 @@
     titleBox.className = "game-meta";
     title.className = "game-title";
     title.textContent = game.name;
-    file.className = "game-file";
-    file.textContent = game.file;
 
-    titleBox.append(title, file);
+    titleBox.append(title);
     head.append(icon, titleBox);
 
     desc.className = "game-desc";
-    desc.textContent = game.desc || "点击进入游戏。";
+    desc.textContent = game.desc || "";
 
     foot.className = "card-foot";
     tag.className = "game-tag";
@@ -177,7 +180,7 @@
     nodes.gamesGrid.appendChild(fragment);
 
     nodes.emptyState.hidden = visibleGames.length > 0;
-    nodes.totalCount.textContent = String(GAMES.length);
+    nodes.totalCount.textContent = String(visibleSourceGames.length);
     nodes.visibleCount.textContent = String(visibleGames.length);
     renderSummary(visibleGames.length);
   }
