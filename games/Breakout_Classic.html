@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>打砖块经典版</title>
+  <style>
+    :root {
+      --bg: #06151f;
+      --panel: #0d2433;
+      --line: #274154;
+      --text: #eff6ff;
+      --muted: #9eb8cc;
+      --accent: #38bdf8;
+      --danger: #f87171;
+      --ok: #34d399;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 18% 8%, #15384e, var(--bg) 46%);
+      color: var(--text);
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      padding: 16px;
+    }
+
+    .wrap {
+      width: min(860px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+      padding: 14px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .chip strong {
+      margin-left: 4px;
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid #3f6280;
+      background: #1a3a53;
+      color: #eef8ff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    button:hover { border-color: #70a7d2; }
+
+    .primary {
+      background: linear-gradient(150deg, #3cc2fa, #1ea2da);
+      color: #052033;
+      border-color: #2ca9df;
+    }
+
+    .danger {
+      background: linear-gradient(150deg, #fb7185, #e34d60);
+      color: #310811;
+      border-color: #f25f74;
+    }
+
+    .stage {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #071a27;
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #071523, #05121d);
+      border: 1px solid #163249;
+      touch-action: none;
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 8px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--danger); }
+
+    .tips {
+      margin-top: 8px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="stats">
+        <div class="chip">分数<strong id="score">0</strong></div>
+        <div class="chip">生命<strong id="lives">3</strong></div>
+        <div class="chip">关卡<strong id="level">1</strong></div>
+        <div class="chip">最高<strong id="best">0</strong></div>
+      </div>
+      <div class="actions">
+        <button id="startBtn" class="primary">开始</button>
+        <button id="pauseBtn">暂停</button>
+        <button id="restartBtn" class="danger">重开</button>
+      </div>
+    </div>
+
+    <div class="stage">
+      <canvas id="canvas" width="800" height="520"></canvas>
+      <div class="status" id="status">按“开始”进入游戏，左右键或拖动鼠标控制挡板。</div>
+    </div>
+    <div class="tips">击碎所有砖块进入下一关，注意别让球掉到底部。</div>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const scoreNode = document.getElementById("score");
+      const livesNode = document.getElementById("lives");
+      const levelNode = document.getElementById("level");
+      const bestNode = document.getElementById("best");
+      const statusNode = document.getElementById("status");
+      const startBtn = document.getElementById("startBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const restartBtn = document.getElementById("restartBtn");
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const brickRows = 6;
+      const brickCols = 10;
+      const brickW = 68;
+      const brickH = 22;
+      const brickPad = 8;
+      const offsetTop = 58;
+      const offsetLeft = 24;
+
+      let rightPressed = false;
+      let leftPressed = false;
+      let running = false;
+      let paused = false;
+      let score = 0;
+      let best = Number(localStorage.getItem("breakoutBest") || 0);
+      let lives = 3;
+      let level = 1;
+      let ball;
+      let paddle;
+      let bricks = [];
+      let rafId = 0;
+
+      bestNode.textContent = String(best);
+
+      function setStatus(text, mode = "") {
+        statusNode.textContent = text;
+        statusNode.className = "status";
+        if (mode) statusNode.classList.add(mode);
+      }
+
+      function initBall() {
+        ball = {
+          x: width / 2,
+          y: height - 80,
+          dx: 3.1 + (level - 1) * 0.35,
+          dy: -(3.1 + (level - 1) * 0.35),
+          r: 9
+        };
+      }
+
+      function initPaddle() {
+        paddle = {
+          w: 126,
+          h: 14,
+          x: (width - 126) / 2,
+          speed: 7
+        };
+      }
+
+      function initBricks() {
+        bricks = [];
+        for (let c = 0; c < brickCols; c += 1) {
+          bricks[c] = [];
+          for (let r = 0; r < brickRows; r += 1) {
+            bricks[c][r] = { alive: true };
+          }
+        }
+      }
+
+      function syncStats() {
+        scoreNode.textContent = String(score);
+        livesNode.textContent = String(lives);
+        levelNode.textContent = String(level);
+      }
+
+      function resetAll() {
+        running = false;
+        paused = false;
+        score = 0;
+        lives = 3;
+        level = 1;
+        initBall();
+        initPaddle();
+        initBricks();
+        syncStats();
+        drawFrame();
+        setStatus("按“开始”进入游戏，左右键或拖动鼠标控制挡板。");
+      }
+
+      function drawBall() {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#5dd5ff";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      function drawPaddle() {
+        ctx.fillStyle = "#a7f3d0";
+        ctx.fillRect(paddle.x, height - paddle.h - 14, paddle.w, paddle.h);
+      }
+
+      function brickColor(row) {
+        const palette = ["#fb7185", "#f59e0b", "#22d3ee", "#34d399", "#a78bfa", "#60a5fa"];
+        return palette[row % palette.length];
+      }
+
+      function drawBricks() {
+        for (let c = 0; c < brickCols; c += 1) {
+          for (let r = 0; r < brickRows; r += 1) {
+            if (!bricks[c][r].alive) continue;
+            const x = c * (brickW + brickPad) + offsetLeft;
+            const y = r * (brickH + brickPad) + offsetTop;
+            ctx.fillStyle = brickColor(r);
+            ctx.fillRect(x, y, brickW, brickH);
+            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.strokeRect(x + 0.5, y + 0.5, brickW - 1, brickH - 1);
+          }
+        }
+      }
+
+      function drawFrame() {
+        ctx.clearRect(0, 0, width, height);
+        drawBricks();
+        drawBall();
+        drawPaddle();
+      }
+
+      function collisionDetection() {
+        for (let c = 0; c < brickCols; c += 1) {
+          for (let r = 0; r < brickRows; r += 1) {
+            const b = bricks[c][r];
+            if (!b.alive) continue;
+            const x = c * (brickW + brickPad) + offsetLeft;
+            const y = r * (brickH + brickPad) + offsetTop;
+            if (ball.x > x && ball.x < x + brickW && ball.y > y && ball.y < y + brickH) {
+              b.alive = false;
+              ball.dy = -ball.dy;
+              score += 10;
+              if (score > best) {
+                best = score;
+                bestNode.textContent = String(best);
+                localStorage.setItem("breakoutBest", String(best));
+              }
+              syncStats();
+              const remains = bricks.flat().filter((brick) => brick.alive).length;
+              if (remains === 0) {
+                nextLevel();
+              }
+              return;
+            }
+          }
+        }
+      }
+
+      function nextLevel() {
+        level += 1;
+        initBricks();
+        initBall();
+        syncStats();
+        setStatus(`进入第 ${level} 关，速度提升。`, "ok");
+      }
+
+      function loseLife() {
+        lives -= 1;
+        syncStats();
+        if (lives <= 0) {
+          running = false;
+          setStatus(`游戏结束，得分 ${score}。点击重开继续挑战。`, "err");
+          return;
+        }
+        initBall();
+        setStatus(`丢失一条命，剩余 ${lives} 条。`, "err");
+      }
+
+      function updatePaddle() {
+        if (rightPressed) paddle.x += paddle.speed;
+        if (leftPressed) paddle.x -= paddle.speed;
+        if (paddle.x < 0) paddle.x = 0;
+        if (paddle.x + paddle.w > width) paddle.x = width - paddle.w;
+      }
+
+      function step() {
+        if (!running || paused) {
+          drawFrame();
+          rafId = requestAnimationFrame(step);
+          return;
+        }
+
+        updatePaddle();
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+
+        if (ball.x + ball.r > width || ball.x - ball.r < 0) ball.dx = -ball.dx;
+        if (ball.y - ball.r < 0) ball.dy = -ball.dy;
+
+        const paddleTop = height - paddle.h - 14;
+        const hitPaddle =
+          ball.y + ball.r > paddleTop &&
+          ball.y + ball.r < paddleTop + paddle.h + 10 &&
+          ball.x > paddle.x &&
+          ball.x < paddle.x + paddle.w;
+        if (hitPaddle) {
+          const hitPos = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+          ball.dx = hitPos * 4.2;
+          ball.dy = -Math.abs(ball.dy);
+        }
+
+        if (ball.y - ball.r > height) {
+          loseLife();
+        }
+
+        collisionDetection();
+        drawFrame();
+        rafId = requestAnimationFrame(step);
+      }
+
+      function startGame() {
+        if (running && paused) {
+          paused = false;
+          setStatus("继续游戏。");
+          return;
+        }
+        if (running) return;
+        running = true;
+        paused = false;
+        setStatus("游戏进行中。");
+      }
+
+      function togglePause() {
+        if (!running) return;
+        paused = !paused;
+        setStatus(paused ? "已暂停。" : "继续游戏。");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") {
+          rightPressed = true;
+        } else if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") {
+          leftPressed = true;
+        } else if (event.key === " ") {
+          event.preventDefault();
+          if (!running) startGame();
+          else togglePause();
+        }
+      });
+
+      document.addEventListener("keyup", (event) => {
+        if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") {
+          rightPressed = false;
+        } else if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") {
+          leftPressed = false;
+        }
+      });
+
+      canvas.addEventListener("mousemove", (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * width;
+        paddle.x = x - paddle.w / 2;
+        if (paddle.x < 0) paddle.x = 0;
+        if (paddle.x + paddle.w > width) paddle.x = width - paddle.w;
+      });
+
+      canvas.addEventListener("touchmove", (event) => {
+        const t = event.changedTouches[0];
+        const rect = canvas.getBoundingClientRect();
+        const x = ((t.clientX - rect.left) / rect.width) * width;
+        paddle.x = x - paddle.w / 2;
+        if (paddle.x < 0) paddle.x = 0;
+        if (paddle.x + paddle.w > width) paddle.x = width - paddle.w;
+      }, { passive: true });
+
+      startBtn.addEventListener("click", startGame);
+      pauseBtn.addEventListener("click", togglePause);
+      restartBtn.addEventListener("click", resetAll);
+
+      resetAll();
+      rafId = requestAnimationFrame(step);
+      window.addEventListener("beforeunload", () => cancelAnimationFrame(rafId));
+    })();
+  </script>
+</body>
+</html>

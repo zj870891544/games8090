@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>井字棋 AI 对战</title>
+  <style>
+    :root {
+      --bg: #0b1322;
+      --panel: #121d32;
+      --line: #2a3d63;
+      --text: #ecf4ff;
+      --muted: #9bb0d3;
+      --x: #60a5fa;
+      --o: #f59e0b;
+      --ok: #34d399;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: radial-gradient(circle at 20% 10%, #1c2e50, var(--bg) 45%);
+      color: var(--text);
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .wrap {
+      width: min(560px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .mode {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+    }
+
+    select,
+    button {
+      border: 1px solid #3e5c91;
+      background: #1c3152;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button:hover { border-color: #6f95d1; }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 7px 9px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .chip strong {
+      display: block;
+      font-size: 22px;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .cell {
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+      color: var(--text);
+      font-size: clamp(44px, 10vw, 72px);
+      font-weight: 700;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cell:disabled {
+      cursor: not-allowed;
+      opacity: 0.95;
+    }
+
+    .cell.x { color: var(--x); }
+    .cell.o { color: var(--o); }
+
+    .status {
+      min-height: 24px;
+      margin-top: 10px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .status.ok { color: var(--ok); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>井字棋</h1>
+      <div class="mode">
+        <span>模式</span>
+        <select id="modeSelect">
+          <option value="ai">人机对战</option>
+          <option value="pvp">双人对战</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button id="newRoundBtn">新一局</button>
+      <button id="resetStatsBtn">清空战绩</button>
+    </div>
+
+    <div class="stats">
+      <div class="chip">X 胜场<strong id="xWins">0</strong></div>
+      <div class="chip">O 胜场<strong id="oWins">0</strong></div>
+      <div class="chip">平局<strong id="draws">0</strong></div>
+    </div>
+
+    <div class="board" id="board"></div>
+    <div class="status" id="status">轮到 X 落子。</div>
+  </div>
+
+  <script>
+    (() => {
+      const boardEl = document.getElementById("board");
+      const statusEl = document.getElementById("status");
+      const modeSelect = document.getElementById("modeSelect");
+      const newRoundBtn = document.getElementById("newRoundBtn");
+      const resetStatsBtn = document.getElementById("resetStatsBtn");
+      const xWinsEl = document.getElementById("xWins");
+      const oWinsEl = document.getElementById("oWins");
+      const drawsEl = document.getElementById("draws");
+
+      const WIN_LINES = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      let cells = Array(9).fill("");
+      let current = "X";
+      let over = false;
+      let aiThinking = false;
+      const stats = { X: 0, O: 0, D: 0 };
+
+      function syncStats() {
+        xWinsEl.textContent = String(stats.X);
+        oWinsEl.textContent = String(stats.O);
+        drawsEl.textContent = String(stats.D);
+      }
+
+      function setStatus(text, good = false) {
+        statusEl.textContent = text;
+        statusEl.className = good ? "status ok" : "status";
+      }
+
+      function evaluate(board) {
+        for (const [a, b, c] of WIN_LINES) {
+          if (board[a] && board[a] === board[b] && board[b] === board[c]) {
+            return board[a];
+          }
+        }
+        return board.every(Boolean) ? "D" : null;
+      }
+
+      function minimax(board, player) {
+        const result = evaluate(board);
+        if (result === "O") return { score: 10 };
+        if (result === "X") return { score: -10 };
+        if (result === "D") return { score: 0 };
+
+        const moves = [];
+        for (let i = 0; i < board.length; i += 1) {
+          if (board[i]) continue;
+          board[i] = player;
+          const next = minimax(board, player === "O" ? "X" : "O");
+          moves.push({ index: i, score: next.score });
+          board[i] = "";
+        }
+
+        if (player === "O") {
+          return moves.reduce((best, move) => (move.score > best.score ? move : best));
+        }
+        return moves.reduce((best, move) => (move.score < best.score ? move : best));
+      }
+
+      function render() {
+        boardEl.innerHTML = "";
+        cells.forEach((value, index) => {
+          const button = document.createElement("button");
+          button.className = "cell";
+          if (value === "X") button.classList.add("x");
+          if (value === "O") button.classList.add("o");
+          button.textContent = value;
+          button.disabled = Boolean(value) || over || aiThinking;
+          button.dataset.index = String(index);
+          boardEl.appendChild(button);
+        });
+      }
+
+      function endGame(result) {
+        over = true;
+        if (result === "X" || result === "O") {
+          stats[result] += 1;
+          setStatus(`${result} 获胜。`, true);
+        } else {
+          stats.D += 1;
+          setStatus("平局。", true);
+        }
+        syncStats();
+      }
+
+      function makeMove(index, player) {
+        if (cells[index] || over) return;
+        cells[index] = player;
+        const result = evaluate(cells);
+        if (result) {
+          render();
+          endGame(result);
+          return;
+        }
+        current = player === "X" ? "O" : "X";
+        render();
+        setStatus(`轮到 ${current} 落子。`);
+      }
+
+      function aiTurn() {
+        if (modeSelect.value !== "ai" || over || current !== "O") return;
+        aiThinking = true;
+        render();
+        setStatus("AI 思考中...");
+        setTimeout(() => {
+          const best = minimax(cells.slice(), "O");
+          aiThinking = false;
+          if (!over && typeof best.index === "number") {
+            makeMove(best.index, "O");
+          } else {
+            render();
+          }
+        }, 220);
+      }
+
+      function resetRound() {
+        cells = Array(9).fill("");
+        current = "X";
+        over = false;
+        aiThinking = false;
+        render();
+        setStatus("轮到 X 落子。");
+      }
+
+      boardEl.addEventListener("click", (event) => {
+        const cell = event.target.closest("button.cell");
+        if (!cell || over || aiThinking) return;
+        const index = Number(cell.dataset.index);
+        if (modeSelect.value === "ai") {
+          if (current !== "X") return;
+          makeMove(index, "X");
+          aiTurn();
+        } else {
+          makeMove(index, current);
+        }
+      });
+
+      modeSelect.addEventListener("change", resetRound);
+      newRoundBtn.addEventListener("click", resetRound);
+      resetStatsBtn.addEventListener("click", () => {
+        stats.X = 0;
+        stats.O = 0;
+        stats.D = 0;
+        syncStats();
+        resetRound();
+      });
+
+      syncStats();
+      resetRound();
+    })();
+  </script>
+</body>
+</html>

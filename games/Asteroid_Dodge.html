@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>小行星闪避</title>
+  <style>
+    :root {
+      --bg: #050913;
+      --panel: #0f1730;
+      --line: #283a70;
+      --text: #e9f2ff;
+      --muted: #9bb0d8;
+      --accent: #60a5fa;
+      --bad: #fb7185;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: radial-gradient(circle at 18% 8%, #1a2b57, var(--bg) 55%);
+      color: var(--text);
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .wrap {
+      width: min(860px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .chip strong { margin-left: 4px; color: var(--text); }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid #4869b5;
+      background: #264285;
+      color: #ecf4ff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    button:hover { border-color: #7598e8; }
+    .danger { background: #b44d64; border-color: #d66780; }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #080f23;
+      padding: 8px;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid #21366b;
+      background: #040a17;
+      touch-action: none;
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 8px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status.bad { color: var(--bad); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="stats">
+        <div class="chip">分数<strong id="score">0</strong></div>
+        <div class="chip">生存秒数<strong id="time">0.0</strong></div>
+        <div class="chip">最高<strong id="best">0</strong></div>
+      </div>
+      <div class="actions">
+        <button id="startBtn">开始</button>
+        <button id="pauseBtn">暂停</button>
+        <button id="restartBtn" class="danger">重开</button>
+      </div>
+    </div>
+
+    <div class="stage">
+      <canvas id="canvas" width="820" height="480"></canvas>
+      <div class="status" id="status">左右键或 A/D 控制飞船移动，躲开小行星。</div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const scoreEl = document.getElementById("score");
+      const timeEl = document.getElementById("time");
+      const bestEl = document.getElementById("best");
+      const statusEl = document.getElementById("status");
+      const startBtn = document.getElementById("startBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const restartBtn = document.getElementById("restartBtn");
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      const ship = { x: w / 2, y: h - 44, r: 14, speed: 6.2 };
+      const keys = { left: false, right: false };
+      let asteroids = [];
+      let stars = [];
+      let running = false;
+      let paused = false;
+      let gameOver = false;
+      let elapsed = 0;
+      let score = 0;
+      let best = Number(localStorage.getItem("asteroidBest") || 0);
+      let spawnTimer = 0;
+      let spawnGap = 0.75;
+      let lastTime = performance.now();
+
+      bestEl.textContent = String(best);
+
+      function setStatus(text, bad = false) {
+        statusEl.textContent = text;
+        statusEl.className = bad ? "status bad" : "status";
+      }
+
+      function reset() {
+        ship.x = w / 2;
+        asteroids = [];
+        stars = Array.from({ length: 80 }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          s: Math.random() * 2 + 0.6
+        }));
+        running = false;
+        paused = false;
+        gameOver = false;
+        elapsed = 0;
+        score = 0;
+        spawnTimer = 0;
+        spawnGap = 0.75;
+        scoreEl.textContent = "0";
+        timeEl.textContent = "0.0";
+        setStatus("左右键或 A/D 控制飞船移动，躲开小行星。");
+      }
+
+      function spawnAsteroid() {
+        const r = Math.random() * 18 + 12;
+        asteroids.push({
+          x: Math.random() * (w - r * 2) + r,
+          y: -r - 10,
+          r,
+          vy: Math.random() * 110 + 120 + elapsed * 6,
+          vx: (Math.random() * 2 - 1) * 28
+        });
+      }
+
+      function collide(a, b) {
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const rr = a.r + b.r;
+        return dx * dx + dy * dy <= rr * rr;
+      }
+
+      function update(dt) {
+        if (!running || paused || gameOver) return;
+
+        elapsed += dt;
+        score = Math.floor(elapsed * 10);
+        scoreEl.textContent = String(score);
+        timeEl.textContent = elapsed.toFixed(1);
+
+        if (keys.left) ship.x -= ship.speed;
+        if (keys.right) ship.x += ship.speed;
+        ship.x = Math.max(ship.r + 4, Math.min(w - ship.r - 4, ship.x));
+
+        spawnGap = Math.max(0.28, 0.75 - elapsed * 0.015);
+        spawnTimer += dt;
+        if (spawnTimer >= spawnGap) {
+          spawnTimer = 0;
+          spawnAsteroid();
+        }
+
+        for (let i = asteroids.length - 1; i >= 0; i -= 1) {
+          const a = asteroids[i];
+          a.x += a.vx * dt;
+          a.y += a.vy * dt;
+          if (a.x < a.r || a.x > w - a.r) {
+            a.vx *= -1;
+          }
+          if (a.y - a.r > h + 20) {
+            asteroids.splice(i, 1);
+            continue;
+          }
+          if (collide(ship, a)) {
+            gameOver = true;
+            running = false;
+            if (score > best) {
+              best = score;
+              bestEl.textContent = String(best);
+              localStorage.setItem("asteroidBest", String(best));
+            }
+            setStatus(`撞击发生，最终分数 ${score}。点击重开继续。`, true);
+            break;
+          }
+        }
+      }
+
+      function drawShip() {
+        ctx.save();
+        ctx.translate(ship.x, ship.y);
+        ctx.beginPath();
+        ctx.moveTo(0, -ship.r);
+        ctx.lineTo(ship.r * 0.82, ship.r);
+        ctx.lineTo(0, ship.r * 0.6);
+        ctx.lineTo(-ship.r * 0.82, ship.r);
+        ctx.closePath();
+        ctx.fillStyle = "#60a5fa";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, 0, ship.r * 0.3, 0, Math.PI * 2);
+        ctx.fillStyle = "#dbeafe";
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawAsteroid(a) {
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#8b7f75";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.stroke();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        for (const s of stars) {
+          ctx.fillStyle = "rgba(255,255,255,0.8)";
+          ctx.fillRect(s.x, s.y, s.s, s.s);
+        }
+
+        for (const a of asteroids) drawAsteroid(a);
+        drawShip();
+      }
+
+      function frame(now) {
+        const dt = Math.min(0.033, (now - lastTime) / 1000);
+        lastTime = now;
+        update(dt);
+        draw();
+        requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (gameOver) return;
+        running = true;
+        paused = false;
+        setStatus("飞行中，注意闪避。");
+      }
+
+      function togglePause() {
+        if (!running || gameOver) return;
+        paused = !paused;
+        setStatus(paused ? "已暂停。" : "飞行中，注意闪避。");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        const key = event.key.toLowerCase();
+        if (key === "arrowleft" || key === "a") keys.left = true;
+        if (key === "arrowright" || key === "d") keys.right = true;
+        if (key === " ") {
+          event.preventDefault();
+          if (!running) start();
+          else togglePause();
+        }
+      });
+
+      document.addEventListener("keyup", (event) => {
+        const key = event.key.toLowerCase();
+        if (key === "arrowleft" || key === "a") keys.left = false;
+        if (key === "arrowright" || key === "d") keys.right = false;
+      });
+
+      canvas.addEventListener("touchmove", (event) => {
+        const touch = event.changedTouches[0];
+        const rect = canvas.getBoundingClientRect();
+        const x = ((touch.clientX - rect.left) / rect.width) * w;
+        ship.x = x;
+      }, { passive: true });
+
+      startBtn.addEventListener("click", start);
+      pauseBtn.addEventListener("click", togglePause);
+      restartBtn.addEventListener("click", reset);
+
+      reset();
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Games8090 在线 HTML 小游戏集合">
+  <title>Games8090 | HTML 小游戏集合</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="index.css">
+  <script defer src="games-data.js"></script>
+  <script defer src="index.js"></script>
+</head>
+<body>
+  <div class="aurora-bg" aria-hidden="true"></div>
+
+  <header class="topbar glass container">
+    <a class="brand" href="index.html" aria-label="Games8090 首页">
+      <span class="brand-mark">8090</span>
+      <span class="brand-name">Games8090</span>
+    </a>
+
+    <label class="search-box" for="searchInput">
+      <span class="search-icon">⌕</span>
+      <input id="searchInput" type="search" placeholder="搜索游戏名称..." autocomplete="off">
+    </label>
+  </header>
+
+  <main class="container">
+    <section class="hero glass">
+      <p class="hero-tag">games8090.online</p>
+      <h1>HTML 小游戏集合</h1>
+      <p class="hero-text">即点即玩，无需安装。支持持续扩充你的专属游戏库。</p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span>游戏总数</span>
+          <strong id="totalCount">0</strong>
+        </div>
+        <div class="stat-item">
+          <span>当前显示</span>
+          <strong id="visibleCount">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel glass">
+      <div class="section-head">
+        <h2>分类筛选</h2>
+        <p id="filterSummary">正在加载...</p>
+      </div>
+      <div id="categoryFilters" class="category-row" role="tablist" aria-label="游戏分类"></div>
+    </section>
+
+    <section class="panel glass">
+      <div class="section-head">
+        <h2>游戏列表</h2>
+      </div>
+      <div id="gamesGrid" class="games-grid"></div>
+      <p id="emptyState" class="empty-state" hidden>没有找到匹配的游戏，请尝试其他关键词。</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer container">
+    <span>© <span id="year"></span> Games8090</span>
+    <span>Domain: games8090.online</span>
+  </footer>
+</body>
+</html>
