@@ -55,8 +55,10 @@ export function analyticsPageView(id: string, path: string, nonce: string) {
   if (!measurementId) {
     measurementId = id;
     window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function (...args: unknown[]) {
-      window.dataLayer?.push(args);
+    window.gtag = window.gtag || function (..._args: unknown[]) {
+      // gtag's command queue expects an Arguments object, as in Google's snippet.
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer?.push(arguments);
     };
     window.gtag("consent", "default", {
       analytics_storage: "denied", ad_storage: "denied",
