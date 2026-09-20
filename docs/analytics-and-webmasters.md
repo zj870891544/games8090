@@ -5,6 +5,7 @@
 ## Google Analytics 4
 
 - 账号：samzhang；媒体资源：8090 Games；网站数据流：8090 Games Web。
+- 媒体资源 ID：`555091517`；[实时报告](https://analytics.google.com/analytics/web/#/a361490566p555091517/realtime/overview)。
 - 衡量 ID：`G-0HQR7PNXDP`；数据流 ID：`15810740163`。
 - 中国时区；使用网站手动发送的 `page_view`，数据流的增强型衡量已关闭，避免单页跳转重复统计。
 - 页面跳转记录浏览事件；游戏开始、重载、切换来源、卡片点击、收藏记录独立事件。
@@ -36,3 +37,14 @@
 部署仍使用 Cloudflare Worker 路由；旧 Pages 项目和仓库历史保留。管理员密码、会话密钥、`.dev.vars`、`.wrangler` 和浏览器测试产物不进入仓库。
 
 参考：[GA 单页应用](https://developers.google.com/analytics/devguides/collection/ga4/single-page-applications)、[手动页面浏览](https://developers.google.com/analytics/devguides/collection/ga4/views)、[Google 网站验证](https://support.google.com/webmasters/answer/9008080)、[Bing 网站验证](https://www.bing.com/webmasters/help/add-and-verify-site-12184f8b)。
+
+## 2026-09-20 线上验收
+
+- 已推送现有 GitHub 仓库 `zj870891544/games8090` 的 `master`，沿用并保留旧提交历史。
+- 部署代码提交：`0fede8a`；Cloudflare Worker 版本：`fe5a64b9-c920-43c1-ba49-2a127697a9dc`。
+- lint、TypeScript、59 项单元测试、production 构建通过；敏感值扫描通过，密码与测试产物未提交。
+- 正式首页的 HTML head 已包含 Google、Bing 的真实验证标签；首页、游戏列表、robots、sitemap 均返回 HTTP 200。地图为合法 XML，当前只有首页符合已有审核策略。
+- 浏览器授权前 GA 脚本数量为 0；授权后加载实际衡量 ID；撤回后重新打开页面脚本数量回到 0。列表仍首屏显示 60 张游戏卡片。
+- GA 实时报告确认：1 位测试访客、3 次 page_view，Privacy、All games、Piece of Cake 各 1 次；另收到 game_card_click、game_start、first_visit、session_start。
+- Google Search Console 的非 www 资源已通过 HTML 标签验证，站点地图已提交。报表首次显示“无法抓取”；重新提交后，在 17:19:22 的 Google 实际网址检查中确认“是否允许抓取：是；网页抓取：成功”。地图报表仍待平台重新处理，不等同于已完成收录。
+- Bing 站点已通过标签验证并接受站点地图提交，初始状态为 Processing。
