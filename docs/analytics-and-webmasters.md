@@ -16,7 +16,7 @@
 
 ## Google Search Console 和 Bing
 
-- 为 `https://games8090.online/` 使用网址前缀资源，保留旧 `www` 资源。
+- 为 `https://games8090.online/` 使用网址前缀资源；旧 `https://www.games8090.online/` 资源已于 2026-09-20 按要求从当前 Search Console 账号移除。
 - 验证标签由根布局直接输出在 HTML `<head>` 中，非正式环境不输出。
 - Google 标签沿用旧站并经当前 Search Console 验证向导确认；Bing 标签来自该站点的验证向导。
 - 两个平台都提交 `https://games8090.online/sitemap.xml`。验证成功不代表已收录，抓取与收录状态以平台为准。
@@ -48,3 +48,4 @@
 - GA 实时报告确认：1 位测试访客、3 次 page_view，Privacy、All games、Piece of Cake 各 1 次；另收到 game_card_click、game_start、first_visit、session_start。
 - Google Search Console 的非 www 资源已通过 HTML 标签验证，站点地图已提交。报表首次显示“无法抓取”；重新提交后，在 17:19:22 的 Google 实际网址检查中确认“是否允许抓取：是；网页抓取：成功”。地图报表仍待平台重新处理，不等同于已完成收录。
 - Bing 站点已通过标签验证，站点地图最终显示 Success：发现 1 个网址，0 错误、0 警告。
+- 清理旧资源：Search Console 资源列表已确认仅保留非 www 的游戏站资源；当前验证标签仍用于此资源，继续保留。GA 仅确认新资源 `555091517`，尚未识别出旧站对应的资源，未删除其他站点的 GA 资源。
