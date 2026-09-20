@@ -47,4 +47,4 @@
 - 浏览器授权前 GA 脚本数量为 0；授权后加载实际衡量 ID；撤回后重新打开页面脚本数量回到 0。列表仍首屏显示 60 张游戏卡片。
 - GA 实时报告确认：1 位测试访客、3 次 page_view，Privacy、All games、Piece of Cake 各 1 次；另收到 game_card_click、game_start、first_visit、session_start。
 - Google Search Console 的非 www 资源已通过 HTML 标签验证，站点地图已提交。报表首次显示“无法抓取”；重新提交后，在 17:19:22 的 Google 实际网址检查中确认“是否允许抓取：是；网页抓取：成功”。地图报表仍待平台重新处理，不等同于已完成收录。
-- Bing 站点已通过标签验证并接受站点地图提交，初始状态为 Processing。
+- Bing 站点已通过标签验证，站点地图最终显示 Success：发现 1 个网址，0 错误、0 警告。
