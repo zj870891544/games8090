@@ -1,0 +1,67 @@
+import {
+  Blocks,
+  Car,
+  Compass,
+  CookingPot,
+  Flame,
+  Gamepad2,
+  Gem,
+  Ghost,
+  Grid2X2,
+  Heart,
+  History,
+  Home,
+  Leaf,
+  Lightbulb,
+  Map,
+  Orbit,
+  Plus,
+  Shield,
+  Spade,
+  Sparkles,
+  Swords,
+  Target,
+  Trophy,
+  Users,
+  Zap,
+} from "lucide-react";
+export const icons = {
+  home: Home,
+  popular: Flame,
+  new: Sparkles,
+  games: Grid2X2,
+  favorites: Heart,
+  recent: History,
+  action: Zap,
+  adventure: Compass,
+  arcade: Gamepad2,
+  puzzle: Blocks,
+  racing: Car,
+  driving: Car,
+  sports: Trophy,
+  shooter: Target,
+  strategy: Shield,
+  simulation: Map,
+  casual: Leaf,
+  multiplayer: Users,
+  "2-player": Swords,
+  platform: Plus,
+  io: Orbit,
+  horror: Ghost,
+  card: Spade,
+  board: Grid2X2,
+  kids: Gem,
+  educational: Lightbulb,
+  "dress-up": Sparkles,
+  cooking: CookingPot,
+};
+export function CategoryIcon({
+  name,
+  size = 18,
+}: {
+  name: string;
+  size?: number;
+}) {
+  const Icon = icons[name as keyof typeof icons] || Gamepad2;
+  return <Icon size={size} strokeWidth={1.7} />;
+}

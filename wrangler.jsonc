@@ -1,0 +1,102 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "8090-night-arcade",
+  "account_id": "850ebaba8351418d28b6f758d1c645ab",
+  "main": "worker.ts",
+  "compatibility_date": "2026-09-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "8090-arcade",
+      "database_id": "00000000-0000-0000-0000-000000000001",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "vars": {
+    "SITE_URL": "http://localhost:3000",
+    "SITE_NAME": "8090",
+    "APP_ENV": "local",
+    "PROVIDER_MODE": "auto",
+    "CONSENT_REQUIRED": "true",
+    "PLAYER_PERMISSION_MODE": "site",
+    "CONTACT_EMAIL": "",
+  },
+  "triggers": { "crons": ["0 3 * * *"] },
+  "observability": { "enabled": true },
+  "workflows": [
+    {
+      "name": "8090-catalog-sync-local",
+      "binding": "CATALOG_SYNC",
+      "class_name": "CatalogSyncWorkflow",
+    },
+  ],
+  "env": {
+    "preview": {
+      "name": "8090-night-arcade-preview",
+      "workflows": [
+        {
+          "name": "8090-catalog-sync-preview",
+          "binding": "CATALOG_SYNC",
+          "class_name": "CatalogSyncWorkflow",
+        },
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "8090-arcade-preview",
+          "database_id": "00000000-0000-0000-0000-000000000002",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "vars": {
+        "SITE_URL": "https://preview.example.invalid",
+        "SITE_NAME": "8090",
+        "APP_ENV": "preview",
+        "PROVIDER_MODE": "live",
+        "CONSENT_REQUIRED": "true",
+        "PLAYER_PERMISSION_MODE": "site",
+        "CONTACT_EMAIL": "",
+      },
+    },
+    "production": {
+      "name": "8090-night-arcade",
+      "routes": [
+        { "pattern": "games8090.online/*", "zone_id": "b9dc8e7608666e38b22e9e8a022b883d" },
+        { "pattern": "www.games8090.online/*", "zone_id": "b9dc8e7608666e38b22e9e8a022b883d" },
+      ],
+      "workflows": [
+        {
+          "name": "8090-catalog-sync",
+          "binding": "CATALOG_SYNC",
+          "class_name": "CatalogSyncWorkflow",
+        },
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "8090-arcade",
+          "database_id": "79c083a1-1371-4a7d-ae84-9ef90ec1e180",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "vars": {
+        "SITE_URL": "https://games8090.online",
+        "SITE_NAME": "8090",
+        "APP_ENV": "production",
+        "GA4_MEASUREMENT_ID": "G-0HQR7PNXDP",
+        "GOOGLE_SITE_VERIFICATION": "elweSr6X4CBA5M28ytnu3P2JXwHzVsWisW6R0sNrUjU",
+        "BING_SITE_VERIFICATION": "AF717EC0FB65A604F47DDE76E44579B2",
+        "PROVIDER_MODE": "live",
+        "CONSENT_REQUIRED": "true",
+        "PLAYER_PERMISSION_MODE": "site",
+        "CONTACT_EMAIL": "",
+      },
+      "triggers": { "crons": ["0 3 * * *"] },
+    },
+  },
+}

@@ -1,0 +1,569 @@
+{
+  "playgama": [
+    {
+      "id": "demo-1",
+      "title": "Neon Drift",
+      "description": "Find your line, time each turn, and keep your momentum through a winding course.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "car",
+        "quick play"
+      ],
+      "developer": "Mint Circuit Studio",
+      "gameURL": "/fixtures/player?game=neon-drift&source=playgama",
+      "thumbnail": "/art/night-drift.webp",
+      "categories": [
+        "racing",
+        "Arcade"
+      ],
+      "mobile": true,
+      "touch": true,
+      "keyboard": true,
+      "rank": 100,
+      "controls": "Demo preview: use the on-screen button. Live controls require publisher verification."
+    },
+    {
+      "id": "demo-5",
+      "title": "Skybound",
+      "description": "Hop between floating islands and discover what lies above the clouds.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "island",
+        "quick play"
+      ],
+      "developer": "Cloud Nine",
+      "gameURL": "/fixtures/player?game=skybound&source=playgama",
+      "thumbnail": "/art/skybound.svg",
+      "categories": [
+        "platform",
+        "Arcade"
+      ],
+      "mobile": true,
+      "touch": true,
+      "keyboard": true,
+      "rank": 96,
+      "controls": "Demo preview: use the on-screen button. Live controls require publisher verification."
+    },
+    {
+      "id": "demo-9",
+      "title": "Turbo Trail",
+      "description": "Find your line, time each turn, and keep your momentum through a winding course.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "car",
+        "quick play"
+      ],
+      "developer": "Mint Circuit Studio",
+      "gameURL": "/fixtures/player?game=turbo-trail&source=playgama",
+      "thumbnail": "/art/turbo-trail.svg",
+      "categories": [
+        "driving",
+        "Arcade"
+      ],
+      "mobile": true,
+      "touch": true,
+      "keyboard": true,
+      "rank": 92,
+      "controls": "Demo preview: use the on-screen button. Live controls require publisher verification."
+    },
+    {
+      "id": "demo-13",
+      "title": "Cosmic Rally",
+      "description": "Find your line, time each turn, and keep your momentum through a winding course.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "car",
+        "quick play"
+      ],
+      "developer": "Star Garage",
+      "gameURL": "/fixtures/player?game=cosmic-rally&source=playgama",
+      "thumbnail": "/art/cosmic-rally.svg",
+      "categories": [
+        "racing",
+        "Arcade"
+      ],
+      "mobile": true,
+      "touch": true,
+      "keyboard": true,
+      "rank": 88,
+      "controls": "Demo preview: use the on-screen button. Live controls require publisher verification."
+    },
+    {
+      "id": "demo-17",
+      "title": "Neon Drift",
+      "description": "Find your line, time each turn, and keep your momentum through a winding course.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "car",
+        "quick play"
+      ],
+      "developer": "Different Studio",
+      "gameURL": "/fixtures/player?game=neon-drift-alt&source=playgama",
+      "thumbnail": "/art/neon-drift-alt.svg",
+      "categories": [
+        "racing",
+        "Arcade"
+      ],
+      "mobile": true,
+      "touch": true,
+      "keyboard": true,
+      "rank": 84,
+      "controls": "Demo preview: use the on-screen button. Live controls require publisher verification."
+    },
+    {
+      "id": "demo-21",
+      "title": "Mecha Arena",
+      "description": "Make quick decisions in a vivid mechanical arena.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "robot",
+        "quick play"
+      ],
+      "developer": "Bit Foundry",
+      "gameURL": "/fixtures/player?game=mecha-arena&source=playgama",
+      "thumbnail": "/art/mecha-arena.svg",
+      "categories": [
+        "shooter",
+        "Arcade"
+      ],
+      "mobile": true,
+      "touch": true,
+      "keyboard": true,
+      "rank": 80,
+      "controls": "Demo preview: use the on-screen button. Live controls require publisher verification."
+    }
+  ],
+  "gamepix": [
+    {
+      "id": "demo-2",
+      "title": "Pocket Planet",
+      "description": "Explore a tiny world full of unexpected paths and colorful discoveries.",
+      "width": 450,
+      "height": 800,
+      "tags": [
+        "planet",
+        "quick play"
+      ],
+      "orientation": "portrait",
+      "author": "Little Orbit",
+      "url": "/fixtures/player?game=pocket-planet&source=gamepix",
+      "thumbnailUrl": "/art/pocket-planet.svg",
+      "categories": [
+        "adventure",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 99
+    },
+    {
+      "id": "demo-6",
+      "title": "Orbit Rush",
+      "description": "Navigate a twisting route through a colorful galaxy.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "rocket",
+        "quick play"
+      ],
+      "author": "Little Orbit",
+      "url": "/fixtures/player?game=orbit-rush&source=gamepix",
+      "thumbnailUrl": "/art/orbit-rush.svg",
+      "categories": [
+        "arcade",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 95
+    },
+    {
+      "id": "demo-10",
+      "title": "Table for Two",
+      "description": "Share a screen and challenge a friend to a quick rally.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "paddles",
+        "quick play"
+      ],
+      "author": "Side by Side",
+      "url": "/fixtures/player?game=table-for-two&source=gamepix",
+      "thumbnailUrl": "/art/table-for-two.svg",
+      "categories": [
+        "2 Player",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 91
+    },
+    {
+      "id": "demo-14",
+      "title": "Garden Tiles",
+      "description": "Arrange colorful pieces, complete the grid, and make room for your next move.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "blocks",
+        "quick play"
+      ],
+      "author": "Moss Studio",
+      "url": "/fixtures/player?game=garden-tiles&source=gamepix",
+      "thumbnailUrl": "/art/garden-tiles.svg",
+      "categories": [
+        "board",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 87
+    },
+    {
+      "id": "demo-18",
+      "title": "Moon Kitchen",
+      "description": "Prepare colorful treats and keep your tiny kitchen running.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "donut",
+        "quick play"
+      ],
+      "author": "Soft Serve",
+      "url": "/fixtures/player?game=moon-kitchen&source=gamepix",
+      "thumbnailUrl": "/art/moon-kitchen.svg",
+      "categories": [
+        "cooking",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 83
+    },
+    {
+      "id": "demo-22",
+      "title": "City Builder",
+      "description": "Discover a miniature world with stories around every corner.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "city",
+        "quick play"
+      ],
+      "author": "Moss Studio",
+      "url": "/fixtures/player?game=city-builder&source=gamepix",
+      "thumbnailUrl": "/art/city-builder.svg",
+      "categories": [
+        "simulation",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 79
+    },
+    {
+      "id": "demo-1",
+      "title": "NEON-DRIFT",
+      "description": "Find your line, time each turn, and keep your momentum through a winding course.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "car",
+        "quick play"
+      ],
+      "author": "Mint Circuit Studio",
+      "url": "/fixtures/player?game=neon-drift&source=gamepix",
+      "thumbnailUrl": "/art/night-drift.webp",
+      "categories": [
+        "racing",
+        "Arcade"
+      ],
+      "responsive": true,
+      "touch": true,
+      "hwcontrols": true,
+      "rkScore": 100
+    }
+  ],
+  "gamemonetize": [
+    {
+      "id": "demo-3",
+      "title": "Block Party",
+      "description": "Arrange colorful pieces, complete the grid, and make room for your next move.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "blocks",
+        "quick play"
+      ],
+      "author": "Grid Works",
+      "url": "/fixtures/player?game=block-party&source=gamemonetize",
+      "thumb": "/art/block-party.svg",
+      "category": [
+        "puzzle",
+        "Casual"
+      ],
+      "mobile": 1
+    },
+    {
+      "id": "demo-7",
+      "title": "Tiny Tactics",
+      "description": "Think a move ahead and bring your best strategy to the board.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "chess",
+        "quick play"
+      ],
+      "author": "Pawn House",
+      "url": "/fixtures/player?game=tiny-tactics&source=gamemonetize",
+      "thumb": "/art/tiny-tactics.svg",
+      "category": [
+        "strategy",
+        "Casual"
+      ],
+      "mobile": 1
+    },
+    {
+      "id": "demo-11",
+      "title": "Bubble Lagoon",
+      "description": "Connect colorful bubbles and find a moment of flow.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "bubbles",
+        "quick play"
+      ],
+      "author": "Soft Serve",
+      "url": "/fixtures/player?game=bubble-lagoon&source=gamemonetize",
+      "thumb": "/art/bubble-lagoon.svg",
+      "category": [
+        "casual",
+        "Casual"
+      ],
+      "mobile": 1
+    },
+    {
+      "id": "demo-15",
+      "title": "Co-op Cosmos",
+      "description": "Explore a tiny world full of unexpected paths and colorful discoveries.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "planet",
+        "quick play"
+      ],
+      "author": "Little Orbit",
+      "url": "/fixtures/player?game=co-op-cosmos&source=gamemonetize",
+      "thumb": "/art/co-op-cosmos.svg",
+      "category": [
+        "multiplayer",
+        "Casual"
+      ],
+      "mobile": 1
+    },
+    {
+      "id": "demo-19",
+      "title": "Dungeon Dash",
+      "description": "Explore mysterious rooms and face a new challenge around every corner.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "sword",
+        "quick play"
+      ],
+      "author": "Bit Foundry",
+      "url": "/fixtures/player?game=dungeon-dash&source=gamemonetize",
+      "thumb": "/art/dungeon-dash.svg",
+      "category": [
+        "adventure",
+        "Casual"
+      ],
+      "mobile": 1
+    },
+    {
+      "id": "demo-23",
+      "title": "Dots Together",
+      "description": "Connect colorful bubbles and find a moment of flow.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "bubbles",
+        "quick play"
+      ],
+      "author": "Side by Side",
+      "url": "/fixtures/player?game=dots-together&source=gamemonetize",
+      "thumb": "/art/dots-together.svg",
+      "category": [
+        "io",
+        "Casual"
+      ],
+      "mobile": 1
+    },
+    {
+      "id": "demo-1",
+      "title": "Neon Drift ",
+      "description": "Find your line, time each turn, and keep your momentum through a winding course.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "car",
+        "quick play"
+      ],
+      "author": "Mint Circuit Studio",
+      "url": "/fixtures/player?game=neon-drift&source=gamemonetize",
+      "thumb": "/art/night-drift.webp",
+      "category": [
+        "racing",
+        "Casual"
+      ],
+      "mobile": 1
+    }
+  ],
+  "wgplayground": [
+    {
+      "id": "demo-4",
+      "title": "Court Kings",
+      "description": "Find the perfect angle and make your next shot count.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "ball",
+        "quick play"
+      ],
+      "developer": "Half Court",
+      "url": "/fixtures/player?game=court-kings&source=wgplayground",
+      "thumbnail": "/art/court-kings.svg",
+      "categories": [
+        "sports",
+        "Arcade"
+      ],
+      "mobile": true
+    },
+    {
+      "id": "demo-8",
+      "title": "Matcha Match",
+      "description": "Match bright pieces and work your way through a satisfying puzzle.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "gems",
+        "quick play"
+      ],
+      "developer": "Soft Serve",
+      "url": "/fixtures/player?game=matcha-match&source=wgplayground",
+      "thumbnail": "/art/matcha-match.svg",
+      "categories": [
+        "puzzle",
+        "Arcade"
+      ],
+      "mobile": true
+    },
+    {
+      "id": "demo-12",
+      "title": "Pixel Quest",
+      "description": "Explore mysterious rooms and face a new challenge around every corner.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "sword",
+        "quick play"
+      ],
+      "developer": "Bit Foundry",
+      "url": "/fixtures/player?game=pixel-quest&source=wgplayground",
+      "thumbnail": "/art/pixel-quest.svg",
+      "categories": [
+        "action",
+        "Arcade"
+      ],
+      "mobile": true
+    },
+    {
+      "id": "demo-16",
+      "title": "Goal Rush",
+      "description": "Aim for the open space and send the ball toward the goal.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "football",
+        "quick play"
+      ],
+      "developer": "Half Court",
+      "url": "/fixtures/player?game=goal-rush&source=wgplayground",
+      "thumbnail": "/art/goal-rush.svg",
+      "categories": [
+        "sports",
+        "Arcade"
+      ],
+      "mobile": true
+    },
+    {
+      "id": "demo-20",
+      "title": "Solitaire After Dark",
+      "description": "Sort your cards and plan the perfect sequence.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "cards",
+        "quick play"
+      ],
+      "developer": "Pawn House",
+      "url": "/fixtures/player?game=solitaire-after-dark&source=wgplayground",
+      "thumbnail": "/art/solitaire-after-dark.svg",
+      "categories": [
+        "card",
+        "Arcade"
+      ],
+      "mobile": true
+    },
+    {
+      "id": "demo-24",
+      "title": "Midnight Manor",
+      "description": "Discover a miniature world with stories around every corner.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "city",
+        "quick play"
+      ],
+      "developer": "Night Window",
+      "url": "/fixtures/player?game=midnight-manor&source=wgplayground",
+      "thumbnail": "/art/midnight-manor.svg",
+      "categories": [
+        "horror",
+        "Arcade"
+      ],
+      "mobile": true
+    },
+    {
+      "id": "demo-3",
+      "title": "Block Party",
+      "description": "Arrange colorful pieces, complete the grid, and make room for your next move.",
+      "width": 960,
+      "height": 540,
+      "tags": [
+        "blocks",
+        "quick play"
+      ],
+      "developer": "Grid Works",
+      "url": "/fixtures/player?game=block-party&source=wgplayground",
+      "thumbnail": "/art/block-party.svg",
+      "categories": [
+        "puzzle",
+        "Arcade"
+      ],
+      "mobile": true
+    }
+  ]
+}

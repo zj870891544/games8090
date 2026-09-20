@@ -1,0 +1,30 @@
+# npm run setup generates these two LOCAL admin secrets when .dev.vars is absent.
+# For production use wrangler secret put, never commit .dev.vars.
+ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=
+
+# Public integration identifiers. Enabled only when APP_ENV=production.
+GA4_MEASUREMENT_ID=
+GOOGLE_SITE_VERIFICATION=
+BING_SITE_VERIFICATION=
+
+# Cloudflare Access (when both are set, password login is disabled).
+ACCESS_TEAM_DOMAIN=
+ACCESS_AUD=
+
+PLAYGAMA_CLID=
+PLAYGAMA_API_BASE=https://playgama.com/api/v1/partner/export/catalogue/games
+GAMEPIX_SID=
+GAMEPIX_API_BASE=https://games.gamepix.com/games
+GAMEMONETIZE_FEED_URL=
+WGPLAYGROUND_API_BASE=https://www.wgplayground.com/api/games_api/get_games
+WGPLAYGROUND_PARTNER_ID=
+# Only use the query parameter explicitly specified by YOUR partner account.
+WGPLAYGROUND_ATTRIBUTION_PARAM=
+
+# Extra exact HTTPS origins, comma-separated; no wildcards.
+PROVIDER_FRAME_ORIGINS=
+PROVIDER_ASSET_ORIGINS=
+PROVIDER_FEED_ORIGINS=
+# See docs/providers.md for account-specific JSON/RSS mapping.
+PROVIDER_MAPPING_JSON='{"gamepix":{"itemsPath":"data"}}'
