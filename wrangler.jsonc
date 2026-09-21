@@ -66,8 +66,26 @@
     "production": {
       "name": "8090-night-arcade",
       "routes": [
-        { "pattern": "games8090.online/*", "zone_id": "b9dc8e7608666e38b22e9e8a022b883d" },
-        { "pattern": "www.games8090.online/*", "zone_id": "b9dc8e7608666e38b22e9e8a022b883d" },
+        {
+          "pattern": "games8090.online/admin*",
+          "zone_id": "b9dc8e7608666e38b22e9e8a022b883d",
+        },
+        {
+          "pattern": "games8090.online/api/admin/*",
+          "zone_id": "b9dc8e7608666e38b22e9e8a022b883d",
+        },
+        {
+          "pattern": "games8090.online/api/events",
+          "zone_id": "b9dc8e7608666e38b22e9e8a022b883d",
+        },
+        {
+          "pattern": "games8090.online/_next/*",
+          "zone_id": "b9dc8e7608666e38b22e9e8a022b883d",
+        },
+        {
+          "pattern": "www.games8090.online/*",
+          "zone_id": "b9dc8e7608666e38b22e9e8a022b883d",
+        },
       ],
       "workflows": [
         {
@@ -86,6 +104,7 @@
       ],
       "vars": {
         "SITE_URL": "https://games8090.online",
+        "STATIC_PUBLIC_SITE": "true",
         "SITE_NAME": "8090",
         "APP_ENV": "production",
         "GA4_MEASUREMENT_ID": "G-0HQR7PNXDP",

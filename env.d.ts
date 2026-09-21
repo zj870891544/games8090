@@ -8,6 +8,7 @@ interface CloudflareEnv {
   APP_ENV: string;
   SITE_URL: string;
   SITE_NAME?: string;
+  STATIC_PUBLIC_SITE?: string;
   PROVIDER_MODE?: string;
   CONSENT_REQUIRED?: string;
   PLAYER_PERMISSION_MODE?: "site" | "external";

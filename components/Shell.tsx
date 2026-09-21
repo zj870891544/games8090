@@ -30,9 +30,9 @@ export function Shell({
             80<span className="brand-outline">90</span>
           </Link>
           <span className="admin-topbar-title">管理后台</span>
-          <Link href="/" className="button">
+          <a href="/" className="button">
             返回网站 <ArrowUpRight size={16} />
-          </Link>
+          </a>
         </header>
         <main id="main">{children}</main>
         <footer>

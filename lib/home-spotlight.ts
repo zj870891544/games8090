@@ -1,0 +1,17 @@
+export const spotlightSlugs = [
+  "merge-cars-defense",
+  "idle-game-dev-simulator",
+  "1941-frozen-front",
+  "piece-of-cake-merge-bake",
+  "2048",
+  "alpha-guns",
+  "snow-rider-neo",
+  "ball-sort-puzzle",
+  "oink-escape",
+  "soccer-random",
+  "bmg-ragdoll-car-race",
+  "emerland-solitaire",
+  "10-blocks",
+  "fruit-match-3-championship",
+  "warrior-way",
+];

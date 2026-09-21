@@ -1,4 +1,5 @@
 "use client";
+import { catalogRequest } from "../lib/catalog-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, RotateCcw } from "lucide-react";
@@ -66,7 +67,7 @@ export function GameCollection({
     if (query) params.set("q", query);
     if (category) params.set("category", category);
     try {
-      const response = await fetch(`/api/games?${params}`, {
+      const response = await catalogRequest(`/api/games?${params}`, {
         signal: controller.signal,
       });
       if (!response.ok) throw new Error("Collection request failed");
@@ -150,7 +151,14 @@ export function GameCollection({
               {loading ? "Loading…" : error ? "Try again" : "Load more games"}
             </button>
           ) : (
-            <Link className="button" href={`${basePath}?${fallbackParams}`}>
+            <Link
+              className="button"
+              href={
+                process.env.NEXT_PUBLIC_STATIC_SITE === "true" && !query
+                  ? `${basePath}/page/${collection.nextPage}`
+                  : `${basePath}?${fallbackParams}`
+              }
+            >
               Load more games <ArrowDown size={16} />
             </Link>
           ))}

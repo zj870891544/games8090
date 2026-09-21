@@ -1,4 +1,5 @@
 "use client";
+import { catalogRequest } from "../lib/catalog-client";
 import { useEffect, useState } from "react";
 import { useHydrated } from "./useHydrated";
 import { Heart, History, ArrowRight } from "lucide-react";
@@ -72,7 +73,7 @@ export function LibraryGrid({
         return;
       }
       try {
-        const response = await fetch(
+        const response = await catalogRequest(
           `/api/library?slugs=${encodeURIComponent(slugs.join(","))}`,
         );
         const data = (await response.json()) as { games: GameCardData[] };
@@ -158,7 +159,7 @@ export function ContinuePlaying() {
       const controller = new AbortController();
       request = controller;
       try {
-        const response = await fetch(
+        const response = await catalogRequest(
           `/api/library?slugs=${encodeURIComponent(slug)}`,
           {
             signal: controller.signal,

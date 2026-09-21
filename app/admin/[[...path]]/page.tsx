@@ -615,7 +615,7 @@ export default async function AdminPage({
                           <h3>{v.source.sourceTitle}</h3>
                           <p>开发者： {v.source.sourceDeveloper || "未提供"}</p>
                           <p>{v.source.sourceDescription}</p>
-                          <Link href={`/game/${v.slug}`}>/game/{v.slug} ↗</Link>
+                          <a href={`/game/${v.slug}`}>/game/{v.slug} ↗</a>
                         </div>
                       ),
                   )}
@@ -942,6 +942,11 @@ export default async function AdminPage({
           </Link>
         ))}
       </nav>
+      {getEnv().STATIC_PUBLIC_SITE === "true" && (
+        <div className="flash" role="status">
+          网站采用静态发布。游戏、来源、首页编排和收录设置保存后，会在下次网站发布时生效。
+        </div>
+      )}
       {query.notice && (
         <div className="flash" role="status">
           {adminMessage(query.notice)}

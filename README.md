@@ -1,12 +1,12 @@
 # 8090 — Night Arcade
 
-A provider-independent browser gaming platform built with **Next.js 16 App Router APIs, vinext, TypeScript, Tailwind CSS, Cloudflare Workers, Workflows, D1, Drizzle, Zod, Vitest and Playwright**. Original Night Arcade UI, server-rendered discovery, and a real persistent catalog/admin system.
+A provider-independent browser gaming platform built with **Next.js 16 App Router APIs, vinext, TypeScript, Tailwind CSS, Cloudflare Workers, Workflows, D1, Drizzle, Zod, Vitest and Playwright**. Public pages are prerendered with Vite/React and served by Cloudflare Pages; the Chinese administration and catalog sync retain Workers/D1.
 
 访问统计与搜索平台配置见 [GA4、GSC 和 Bing 接入说明](docs/analytics-and-webmasters.md)。游戏列表首屏显示 60 款，向下滚动自动继续加载，保留返回时的列表与位置。
 
-**当前更新：2026-09-20 已部署到 [games8090.online](https://games8090.online/)，[中文管理后台](https://games8090.online/admin)和 801 款真实游戏目录已上线。线上提供第三方游戏加载选择：允许后点击 Play now 开始，拒绝或撤回会关闭播放器。部署资源、验证和回退方式见 [部署记录](docs/deployment-2026-09-20.md)。**
+**当前发布方式：免费 Cloudflare Pages 静态站，保留新版游戏墙、搜索、每批 60 款连续加载、收藏、最近游玩、775 款已发布真实游戏与原有 GA/GSC/Bing 配置。后台和供应商同步继续使用现有 Worker/D1。目录更改需要重新导出并发布，详见 [静态发布说明](docs/static-publishing.md)。**
 
-The source repository began empty. A fresh development seed contains **24 explicitly fictional canonical games and 27 fixture sources**. The current local catalog now contains **801 real games**; its 24 older samples have been moved to drafts, so public discovery, search, saved lists and game pages no longer expose the test player. The sample data remains available in local Studio. Production contains only the 801 real games. Provider attribution/revenue verification remains separate from importing and deploying the catalog.
+The source repository began empty. A fresh development seed contains **24 explicitly fictional canonical games and 27 fixture sources**. The current local catalog now contains **801 real games**; its 24 older samples have been moved to drafts, so public discovery, search, saved lists and game pages no longer expose the test player. The sample data remains available in local Studio. The current production database has 775 published games after curation; only published, non-fixture games are included in static releases. Provider attribution/revenue verification remains separate from importing and deploying the catalog.
 
 Open Privacy settings on a real game, choose whether to allow the third-party player, then click Play now. With `PLAYER_PERMISSION_MODE=site`, this works in local, preview and production. The choice lasts for the current tab and can be revoked from the footer; revocation closes the player. It controls loading the iframe, does not generate advertising consent strings, and preserves provider privacy controls. Use `PLAYER_PERMISSION_MODE=external` when integrating a separate CMP; an existing external bridge is never overwritten.
 
@@ -114,32 +114,30 @@ npx wrangler d1 migrations apply DB --remote --env production
 
 `lib/db/schema.ts` is the Drizzle model. Ordered SQL in `migrations/0001_...sql` onward is the deployment source of truth and includes FTS5/triggers that Drizzle cannot infer. For future changes, use `npx drizzle-kit generate` to draft SQL into `migrations/generated`, inspect it against applied migrations, then add the next numbered migration to the root migration directory. Do not apply generated drafts blindly or replay already-applied schema changes.
 
-## Deploy to Cloudflare Workers
-
-Production was deployed with the user's authorization on 2026-09-20. It uses Worker Routes on the existing proxied root and www DNS records; the previous Pages project remains intact. Keep those DNS records proxied and retain the routes in `wrangler.jsonc`. See the deployment record for rollback details.
+## Publish the free static site
 
 ```sh
-npx wrangler login
-# Or configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in CI.
-
-npx wrangler secret put ADMIN_PASSWORD --env production
-npx wrangler secret put ADMIN_SESSION_SECRET --env production
-# Repeat for each configured provider credential/feed URL and preview environment.
-# Example:
-npx wrangler secret put PLAYGAMA_CLID --env production
-npx wrangler secret put PLAYGAMA_API_BASE --env production
-
-# Apply migrations first, then build for the matching environment and deploy.
-npx wrangler d1 migrations apply DB --remote --env preview
-npm run deploy:preview
-
-npx wrangler d1 migrations apply DB --remote --env production
-npm run deploy:production
+npm run build:static       # builds committed public snapshot; no D1 credentials needed
+npm run preview:static     # http://127.0.0.1:3002
+npm run deploy:production  # static Pages release (also: npm run deploy)
 ```
 
-The Cloudflare Vite plugin resolves `CLOUDFLARE_ENV` at build time and emits `dist/server/wrangler.json` with the compiled Worker/assets. Deployment commands use that generated configuration; do not deploy the raw TypeScript source without a build. `npm run preview` runs the last build locally. `npm run deploy` is an alias for production deployment.
+Cloudflare Pages project `games8090` builds `master` with `npm run build:static`, output `dist/static`. The checked-in snapshot contains only public game data and approved embed configurations; it excludes credentials, disabled sources, drafts, and internal contract records.
 
-Before public launch: verify one real provider at a time in preview, copy authorized ads.txt entries into `config/ads`, connect your approved CMP, finalize legal/operator text and domain, check live gameplay and publisher attribution, then curate/index real games. The missing credentials are not a reason to invent API responses, licensing, revenue percentages or ads.txt records.
+After changing games, provider status, source eligibility, homepage curation or index settings in the admin:
+
+```sh
+npm run catalog:export     # authenticated read of production D1; preserves attribution
+# Review and commit static/published-catalog.json, then push master to publish automatically.
+# Alternatively publish immediately from this checkout:
+npm run deploy:static
+```
+
+`npm run publish:catalog` combines export and direct publication; commit/push the updated snapshot afterwards so the next Git build retains it. Source/provider removals require a new static release to remove already-published pages and embeds. Daily sync updates D1, not the currently deployed snapshot.
+
+Use `npm run deploy:backend` only when changing the admin or sync backend. It builds vinext and deploys the compiled `dist/server/wrangler.json`. Its routes cover `/admin*`, `/api/admin/*`, `/api/events`, `/_next/*`, and the lightweight www-to-apex redirect. **Do not restore the apex `games8090.online/*` Worker route**, which would send static pages through SSR again.
+
+D1 migrations and existing Worker secrets are unchanged. Public hosting needs no paid Workers upgrade. The admin, counters and sync remain subject to the existing free Worker/D1 quotas; public browsing, search and play do not wait on those counters. See [static-publishing.md](docs/static-publishing.md) for release and rollback instructions.
 
 ## Assets
 

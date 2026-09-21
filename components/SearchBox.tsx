@@ -1,4 +1,5 @@
 "use client";
+import { catalogRequest } from "../lib/catalog-client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "./useHydrated";
@@ -16,7 +17,7 @@ export function SearchBox() {
     const abort = new AbortController();
     if (query.trim().length < 2) return;
     const timeout = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+      catalogRequest(`/api/search?q=${encodeURIComponent(query)}`, {
         signal: abort.signal,
       })
         .then((r) => r.json() as Promise<{ games: GameCardData[] }>)
