@@ -145,3 +145,50 @@ export function ClearLibraryButton() {
     </button>
   );
 }
+
+export function ContinuePlaying() {
+  const [game, setGame] = useState<GameCardData | null>(null);
+  useEffect(() => {
+    let request: AbortController | undefined;
+    const update = async () => {
+      request?.abort();
+      const slug = readLibrary().recent[0]?.slug;
+      setGame(null);
+      if (!slug) return;
+      const controller = new AbortController();
+      request = controller;
+      try {
+        const response = await fetch(
+          `/api/library?slugs=${encodeURIComponent(slug)}`,
+          {
+            signal: controller.signal,
+          },
+        );
+        if (!response.ok) return;
+        const data = (await response.json()) as { games: GameCardData[] };
+        if (!controller.signal.aborted) setGame(data.games[0] || null);
+      } catch {
+        /* History is optional; navigation stays available if it cannot load. */
+      }
+    };
+    void update();
+    window.addEventListener("arcade-library", update);
+    window.addEventListener("storage", update);
+    return () => {
+      request?.abort();
+      window.removeEventListener("arcade-library", update);
+      window.removeEventListener("storage", update);
+    };
+  }, []);
+  if (!game) return null;
+  return (
+    <Link
+      className="continue-playing"
+      href={`/game/${game.slug}`}
+      aria-label={`Continue playing ${game.title}`}
+    >
+      <span>Continue: {game.title}</span>
+      <ArrowRight size={18} />
+    </Link>
+  );
+}

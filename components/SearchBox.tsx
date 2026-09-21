@@ -66,7 +66,7 @@ export function SearchBox() {
         disabled={!hydrated}
         name="q"
         type="search"
-        placeholder="Find your next favorite game"
+        placeholder="Find a game, take a break"
         value={query}
         autoComplete="off"
         aria-label="Search games"

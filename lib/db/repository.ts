@@ -71,6 +71,19 @@ export interface BrowseOptions {
   slugs?: string[];
   includeDrafts?: boolean;
 }
+export async function publishedGameCount() {
+  const result = await getDb()
+    .select({ total: sql<number>`count(*)` })
+    .from(s.games)
+    .where(
+      and(
+        eq(s.games.publishStatus, "published"),
+        getEnv().APP_ENV === "local" ? undefined : eq(s.games.isFixture, false),
+      ),
+    )
+    .get();
+  return result?.total || 0;
+}
 export async function browse(
   options: BrowseOptions = {},
 ): Promise<GameCardData[]> {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@fontsource-variable/outfit";
 import "@fontsource-variable/dm-sans";
 import "./globals.css";
+import "./arcade.css";
 import { Shell } from "../components/Shell";
 import { getEnv } from "../lib/db/client";
 import { headers } from "next/headers";
@@ -34,12 +35,21 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        {integrations.google && <meta name="google-site-verification" content={integrations.google} />}
-        {integrations.bing && <meta name="msvalidate.01" content={integrations.bing} />}
+        {integrations.google && (
+          <meta name="google-site-verification" content={integrations.google} />
+        )}
+        {integrations.bing && (
+          <meta name="msvalidate.01" content={integrations.bing} />
+        )}
       </head>
       <body>
-        {integrations.ga4Id && <GoogleAnalytics id={integrations.ga4Id} nonce={nonce} />}
-        <Shell sitePermission={env.PLAYER_PERMISSION_MODE === "site"} analyticsEnabled={!!integrations.ga4Id}>
+        {integrations.ga4Id && (
+          <GoogleAnalytics id={integrations.ga4Id} nonce={nonce} />
+        )}
+        <Shell
+          sitePermission={env.PLAYER_PERMISSION_MODE === "site"}
+          analyticsEnabled={!!integrations.ga4Id}
+        >
           {children}
         </Shell>
       </body>

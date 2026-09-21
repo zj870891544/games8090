@@ -1,0 +1,861 @@
+/* Midnight Arcade: the public site only. The Chinese Studio keeps its forms. */
+.arcade-shell {
+  --bg: #101113;
+  --surface: #191c21;
+  --surface-high: #22262c;
+  --border: #272b31;
+  --text: #f3f4f6;
+  --muted: #a4aab5;
+  --accent: #c2f477;
+  --sidebar: 76px;
+  --header: 80px;
+  min-height: 100vh;
+  background: var(--bg);
+}
+.arcade-header {
+  position: fixed;
+  inset: 0 0 auto var(--sidebar);
+  height: var(--header);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 46px;
+  padding: 0 26px;
+  background: #101113f5;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.arcade-wordmark {
+  flex: 0 0 auto;
+  font-family: "Outfit Variable", sans-serif;
+  font-size: 46px;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: -2px;
+}
+.arcade-wordmark span {
+  color: var(--accent);
+}
+.arcade-header .search-box {
+  height: 46px;
+  max-width: 558px;
+  flex: 1;
+  border-radius: 12px;
+  border-color: #2a3039;
+  background: #1b1e23;
+  padding: 0 16px;
+  gap: 13px;
+}
+.arcade-header .search-box input {
+  font-size: 15px;
+}
+.arcade-header .search-box > svg {
+  width: 21px;
+  height: 21px;
+}
+.arcade-header .search-box kbd {
+  display: none;
+}
+.arcade-header .search-box input::placeholder {
+  color: #a4adbc;
+}
+.arcade-header .search-box:focus-within {
+  border-color: #8bae58;
+}
+.arcade-header .suggestions {
+  top: 50px;
+}
+.arcade-header .suggestions button {
+  min-height: 44px;
+  font-size: 14px;
+}
+.arcade-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.arcade-favorites {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 44px;
+}
+.arcade-favorites:hover {
+  color: var(--accent);
+}
+.continue-playing {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 650;
+  max-width: 216px;
+  padding-right: 25px;
+  border-right: 1px solid var(--border);
+}
+.continue-playing span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.arcade-rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar);
+  background: #111417;
+  border-right: 1px solid var(--border);
+  z-index: 45;
+}
+.rail-brand {
+  height: var(--header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rail-brand .brand-mark {
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border-radius: 10px;
+}
+.arcade-rail nav {
+  padding: 10px 7px 20px;
+  overflow-y: auto;
+  max-height: calc(100dvh - var(--header));
+  scrollbar-width: none;
+}
+.rail-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 76px;
+  color: #a9b2c2;
+  font-size: 11px;
+  font-weight: 550;
+  border-radius: 10px;
+  margin: 0 0 2px;
+}
+.rail-icon {
+  width: 46px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+}
+.rail-link.active {
+  color: var(--accent);
+}
+.rail-link.active .rail-icon {
+  background: #c2f47716;
+}
+.rail-link:hover {
+  color: var(--accent);
+  background: #c2f47707;
+}
+.rail-utility {
+  min-height: 58px;
+}
+.rail-utility > span:last-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.rail-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 18px 11px 13px;
+}
+.arcade-shell .content-wrap {
+  margin-left: var(--sidebar);
+  padding-top: var(--header);
+}
+.arcade-shell .page {
+  max-width: 1660px;
+  padding: 24px 26px 60px;
+  margin: 0 auto;
+}
+.arcade-intro h1 {
+  font-family: "DM Sans Variable", sans-serif;
+  font-size: clamp(42px, 4.2vw, 60px);
+  font-weight: 850;
+  line-height: 1.05;
+  letter-spacing: -2.3px;
+  margin: 0 0 3px;
+}
+.arcade-intro p {
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.4;
+  margin: 0;
+}
+.category-nav {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin: 16px 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+.category-primary {
+  display: flex;
+  align-items: stretch;
+  gap: 26px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.category-primary > a,
+.category-more > summary {
+  color: var(--muted);
+  padding: 11px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 20px;
+  border-bottom: 2px solid transparent;
+}
+.category-primary a:hover,
+.category-more summary:hover {
+  color: var(--text);
+}
+.category-primary .selected,
+.category-more .selected {
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 650;
+}
+.category-more {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.category-more summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.category-more summary::-webkit-details-marker {
+  display: none;
+}
+.category-more summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+  border-radius: 4px;
+}
+.category-more[open] summary {
+  color: var(--accent);
+}
+.category-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 9px);
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 12px;
+  width: min(530px, 100%);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 13px;
+  box-shadow: 0 16px 40px #0006;
+}
+.category-menu a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px;
+  font-size: 13px;
+  color: #c1c7d1;
+  border-radius: 6px;
+}
+.category-menu a:hover,
+.category-menu a[aria-current] {
+  color: var(--accent);
+  background: #c2f4770c;
+}
+.home-spotlight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.5fr) minmax(0, 4.1fr);
+  gap: 16px;
+}
+.spotlight-games {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.spotlight-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  min-width: 0;
+  border: 1px solid #30363e;
+  border-radius: 14px;
+  background: var(--surface);
+  isolation: isolate;
+}
+.spotlight-art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.spotlight-art > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s;
+}
+.spotlight-card:hover .spotlight-art > img {
+  transform: scale(1.035);
+}
+.spotlight-copy {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 18px;
+  background: #111519c9;
+  backdrop-filter: blur(6px);
+}
+.spotlight-copy h2 {
+  font-size: clamp(23px, 2.05vw, 31px);
+  font-weight: 700;
+  letter-spacing: -0.65px;
+  line-height: 1.15;
+  margin: 0 0 4px;
+}
+.spotlight-copy p {
+  color: #c2c8d1;
+  font-size: 14px;
+  text-transform: capitalize;
+  margin: 0 0 13px;
+}
+.spotlight-copy .button {
+  min-height: 44px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 750;
+}
+.arcade-shell .game-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 20px 18px;
+}
+.arcade-shell .card-art {
+  aspect-ratio: 1.07;
+  border-radius: 11px;
+  background: #22272d;
+}
+.arcade-shell .card-art::after {
+  display: none;
+}
+.arcade-shell .card-caption {
+  margin-top: 7px;
+}
+.arcade-shell .card-caption h3 {
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+}
+.arcade-shell .game-card > p {
+  font-size: 12px;
+  color: #a9b1c0;
+  line-height: 18px;
+  margin: 1px 0 0;
+}
+.arcade-shell .game-card:hover .card-caption h3 {
+  color: var(--accent);
+}
+.arcade-shell .game-card:focus-visible,
+.spotlight-card:focus-visible {
+  outline-offset: 5px;
+}
+.arcade-shell .card-play {
+  width: 46px;
+  height: 46px;
+}
+.arcade-shell .home-more-grid {
+  margin-top: 18px;
+}
+.arcade-shell .home-more-grid .card-art {
+  aspect-ratio: 1.25;
+}
+.discover-collection-link {
+  padding: 28px 0 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.discover-collection-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+.arcade-shell .section {
+  margin-top: 36px;
+}
+.arcade-shell .section-heading {
+  margin-bottom: 17px;
+}
+.arcade-shell .section-heading h2 {
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -0.5px;
+}
+.arcade-shell .section-heading > a {
+  min-height: 38px;
+  color: #aab2bf;
+  font-size: 13px;
+}
+.arcade-shell .section .card-art {
+  aspect-ratio: 1.25;
+}
+.arcade-shell .page-heading {
+  margin: 0 0 18px;
+}
+.arcade-shell .page-heading h1 {
+  font-size: clamp(36px, 3.7vw, 54px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -1.6px;
+  margin-bottom: 8px;
+}
+.arcade-shell .page-heading > p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+.arcade-shell .collection-topline {
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+}
+.arcade-shell .collection-topline > span:last-child {
+  font-size: 10px;
+}
+.arcade-shell .browse-grid {
+  row-gap: 24px;
+}
+.arcade-shell .browse-grid .card-art {
+  aspect-ratio: 1.25;
+}
+.arcade-shell .game-page {
+  max-width: 1480px;
+}
+.arcade-shell .breadcrumbs {
+  font-size: 12px;
+  line-height: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.arcade-shell .player-container {
+  background: #0a0c0f;
+  border-color: var(--border);
+  border-radius: 14px;
+}
+.arcade-shell .player-inner {
+  width: 100%;
+}
+.arcade-shell .player-start h2 {
+  font-size: clamp(30px, 3.3vw, 50px);
+  max-width: min(100%, 780px);
+  overflow-wrap: anywhere;
+}
+.arcade-shell .player-toolbar {
+  padding: 12px 8px;
+}
+.arcade-shell .player-toolbar .text-button {
+  min-height: 44px;
+  font-size: 13px;
+}
+.arcade-shell .player-credits {
+  font-size: 12px;
+}
+.arcade-shell .game-title-row h1 {
+  font-size: clamp(28px, 3vw, 40px);
+}
+.arcade-shell .button {
+  min-height: 42px;
+}
+.arcade-shell footer {
+  max-width: 1608px;
+  margin: 0 26px;
+  padding-bottom: 32px;
+}
+.arcade-shell footer nav {
+  font-size: 12px;
+  gap: 14px;
+  line-height: 1.8;
+}
+.arcade-shell footer small {
+  font-size: 11px;
+  color: #9ca6b6;
+}
+.arcade-shell .footer-brand > span {
+  font-size: 12px;
+  color: #a5adba;
+}
+.arcade-shell .loading-page .skeleton-title {
+  max-width: 650px;
+}
+.arcade-shell .loading-page .skeleton-hero {
+  height: 420px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 1660px) {
+  .arcade-header {
+    gap: 54px;
+  }
+  .arcade-header .search-box {
+    max-width: 670px;
+  }
+}
+@media (max-width: 1150px) {
+  .arcade-header {
+    gap: 28px;
+  }
+  .arcade-header-actions {
+    gap: 18px;
+  }
+  .continue-playing {
+    max-width: 175px;
+    padding-right: 18px;
+  }
+  .arcade-favorites span {
+    display: none;
+  }
+  .arcade-favorites {
+    justify-content: center;
+    width: 44px;
+  }
+  .arcade-intro h1 {
+    font-size: 50px;
+  }
+  .arcade-shell .game-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .arcade-shell .home-more-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .category-primary {
+    gap: 16px;
+  }
+}
+@media (max-width: 900px) {
+  .arcade-shell {
+    --sidebar: 68px;
+    --header: 72px;
+  }
+  .arcade-header {
+    padding: 0 22px;
+    gap: 24px;
+  }
+  .arcade-wordmark {
+    font-size: 38px;
+  }
+  .continue-playing {
+    display: none;
+  }
+  .arcade-shell .page {
+    padding: 24px 22px 48px;
+  }
+  .arcade-intro h1 {
+    font-size: 44px;
+    letter-spacing: -1.6px;
+  }
+  .arcade-intro p {
+    font-size: 17px;
+  }
+  .category-primary {
+    gap: 13px;
+  }
+  .category-primary > a,
+  .category-more > summary {
+    font-size: 13px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .home-spotlight-grid {
+    display: block;
+  }
+  .spotlight-card {
+    min-height: 290px;
+    margin-bottom: 18px;
+  }
+  .spotlight-art > img {
+    object-position: center 45%;
+  }
+  .spotlight-copy {
+    padding: 16px 20px;
+  }
+  .spotlight-copy h2 {
+    max-width: 75%;
+    font-size: 28px;
+  }
+  .spotlight-copy .button {
+    position: absolute;
+    right: 20px;
+    bottom: 19px;
+  }
+  .spotlight-copy p {
+    margin-bottom: 0;
+  }
+  .spotlight-games {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .arcade-shell .home-more-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .arcade-shell .card-caption h3 {
+    font-size: 13px;
+  }
+  .arcade-shell .game-card > p {
+    font-size: 12px;
+  }
+  .arcade-shell .game-grid {
+    gap: 20px 14px;
+  }
+}
+@media (max-width: 700px) {
+  .arcade-shell {
+    --sidebar: 0px;
+    --header: 118px;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+  .arcade-header {
+    left: 0;
+    height: var(--header);
+    padding: 13px 18px 12px;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 10px 18px;
+  }
+  .arcade-wordmark {
+    font-size: 35px;
+  }
+  .arcade-header .search-box {
+    order: 3;
+    height: 42px;
+    flex-basis: 100%;
+    max-width: none;
+    border-radius: 9px;
+  }
+  .arcade-header .search-box input {
+    font-size: 16px;
+  }
+  .arcade-header .search-box > svg {
+    width: 19px;
+  }
+  .arcade-header .suggestions {
+    top: 47px;
+  }
+  .arcade-header-actions {
+    margin-left: auto;
+  }
+  .arcade-favorites span {
+    display: inline;
+  }
+  .arcade-favorites {
+    width: auto;
+    font-size: 12px;
+    min-height: 36px;
+  }
+  .arcade-rail {
+    inset: auto 0 0;
+    width: auto;
+    height: calc(68px + env(safe-area-inset-bottom));
+    border-right: 0;
+    border-top: 1px solid var(--border);
+    background: #121519f7;
+    backdrop-filter: blur(16px);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .rail-brand,
+  .rail-divider {
+    display: none;
+  }
+  .arcade-rail nav {
+    display: flex;
+    justify-content: space-around;
+    max-height: none;
+    padding: 3px 7px;
+  }
+  .rail-link {
+    flex: 1;
+    min-height: 60px;
+    margin: 0;
+    gap: 2px;
+    font-size: 10px;
+  }
+  .rail-icon {
+    width: 42px;
+    height: 34px;
+    border-radius: 8px;
+  }
+  .rail-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+  .rail-utility > span:last-child {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+  .arcade-shell .content-wrap {
+    margin-left: 0;
+  }
+  .arcade-shell .page {
+    padding: 24px 18px 36px;
+  }
+  .arcade-intro h1 {
+    max-width: 540px;
+    font-size: clamp(32px, 6.8vw, 43px);
+    letter-spacing: -1.35px;
+    line-height: 1.13;
+    margin-bottom: 7px;
+  }
+  .arcade-intro p {
+    font-size: 15px;
+  }
+  .category-nav {
+    margin: 17px 0 16px;
+    gap: 9px;
+  }
+  .category-primary {
+    gap: 17px;
+  }
+  .category-primary > a,
+  .category-more > summary {
+    font-size: 13px;
+    padding: 12px 1px;
+  }
+  .category-more > summary {
+    padding-left: 4px;
+  }
+  .category-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    padding: 8px;
+    max-height: 55dvh;
+    overflow-y: auto;
+  }
+  .category-menu a {
+    font-size: 13px;
+    padding: 9px;
+  }
+  .spotlight-card {
+    min-height: 300px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+  .spotlight-copy {
+    padding: 14px 16px;
+  }
+  .spotlight-copy h2 {
+    font-size: 24px;
+    max-width: none;
+  }
+  .spotlight-copy p {
+    font-size: 12px;
+    margin-bottom: 11px;
+  }
+  .spotlight-copy .button {
+    position: static;
+    min-height: 40px;
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+  .spotlight-games,
+  .arcade-shell .game-grid,
+  .arcade-shell .home-more-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 12px;
+  }
+  .arcade-shell .card-art {
+    aspect-ratio: 1.12;
+    border-radius: 10px;
+  }
+  .arcade-shell .card-caption h3 {
+    font-size: 13px;
+    line-height: 19px;
+  }
+  .arcade-shell .game-card > p {
+    font-size: 11px;
+    line-height: 17px;
+  }
+  .arcade-shell .home-more-grid {
+    margin-top: 20px;
+  }
+  .arcade-shell .page-heading h1 {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+  .arcade-shell .page-heading > p {
+    font-size: 14px;
+  }
+  .arcade-shell .section {
+    margin-top: 28px;
+  }
+  .arcade-shell .section-heading h2 {
+    font-size: 21px;
+  }
+  .arcade-shell .section-heading > a {
+    font-size: 12px;
+  }
+  .discover-collection-link {
+    padding-top: 17px;
+  }
+  .arcade-shell .game-title-row {
+    gap: 12px;
+  }
+  .arcade-shell .game-title-row h1 {
+    font-size: 27px;
+  }
+  .arcade-shell .player-start h2 {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+  .arcade-shell .player-toolbar .text-button {
+    font-size: 12px;
+  }
+  .arcade-shell .player-credits {
+    font-size: 11px;
+  }
+  .arcade-shell .breadcrumbs {
+    font-size: 11px;
+  }
+  .arcade-shell footer {
+    margin: 0 18px;
+    gap: 20px;
+    padding: 24px 0;
+  }
+  .arcade-shell footer nav {
+    gap: 11px;
+    font-size: 11px;
+  }
+  .arcade-shell .loading-page .skeleton-hero {
+    height: 300px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-art > img {
+    transition: none;
+  }
+}

@@ -3,6 +3,7 @@ import { ArrowRight, SearchX } from "lucide-react";
 import { browse, type BrowseOptions } from "../lib/db/repository";
 import { GameCollection } from "./GameCollection";
 import { PageEvent } from "./PageEvent";
+import { CategoryNav } from "./CategoryNav";
 import {
   catalogPage,
   catalogPageSize,
@@ -37,12 +38,12 @@ export async function BrowsePage({
     currentPage,
   ]);
   return (
-    <div className="page">
+    <div className="page catalog-page">
       <header className="page-heading">
-        <span className="eyebrow">THE GOOD STUFF, ALL IN ONE PLACE</span>
         <h1>{title}</h1>
         <p>{description}</p>
       </header>
+      <CategoryNav />
       {event && <PageEvent event={event} />}
       <div className="collection-topline">
         <span>

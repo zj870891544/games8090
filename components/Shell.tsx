@@ -1,19 +1,10 @@
 "use client";
-import { useState } from "react";
-import { useHydrated } from "./useHydrated";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ArrowUpRight,
-  ChevronLeft,
-  Menu,
-  Heart,
-  History,
-  Gamepad2,
-} from "lucide-react";
+import { ArrowUpRight, Heart, Gamepad2 } from "lucide-react";
 import { SearchBox } from "./SearchBox";
 import { CategoryIcon } from "./Icons";
-import { taxonomy, categorySlug } from "../lib/normalize";
+import { ContinuePlaying } from "./Library";
 import { PrivacySettings } from "./PrivacySettings";
 export function Shell({
   children,
@@ -24,10 +15,7 @@ export function Shell({
   sitePermission: boolean;
   analyticsEnabled?: boolean;
 }) {
-  const hydrated = useHydrated();
   const path = usePathname();
-  const [collapsed, setCollapsed] = useState(false),
-    [mobileOpen, setMobileOpen] = useState(false);
   if (path === "/admin" || path.startsWith("/admin/")) {
     return (
       <div className="admin-site-shell" lang="zh-CN">
@@ -54,105 +42,59 @@ export function Shell({
       </div>
     );
   }
-  const nav = (href: string, label: string, icon: string) => (
+  const nav = (href: string, label: string, icon: string, utility = false) => (
     <Link
-      onClick={() => setMobileOpen(false)}
       href={href}
-      className={`nav-link ${path === href ? "active" : ""}`}
+      className={`rail-link ${path === href ? "active" : ""} ${utility ? "rail-utility" : ""}`}
       key={href}
-      title={collapsed ? label : undefined}
+      title={label}
+      aria-label={label}
+      aria-current={path === href ? "page" : undefined}
     >
-      <CategoryIcon name={icon} />
+      <span className="rail-icon">
+        <CategoryIcon name={icon} size={24} />
+      </span>
       <span>{label}</span>
-      {path === href && <i />}
     </Link>
   );
   return (
-    <div
-      className={`site-shell ${collapsed ? "is-collapsed" : ""} ${mobileOpen ? "menu-open" : ""}`}
-    >
+    <div className="site-shell arcade-shell">
       <a className="skip-link" href="#main">
         Skip to games
       </a>
-      <header className="topbar">
-        <div className="brand-area">
-          <button
-            className="icon-button mobile-menu"
-            disabled={!hydrated}
-            aria-label="Toggle navigation"
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            <Menu size={21} />
-          </button>
-          <Link href="/" className="brand" aria-label="8090 home">
-            <span className="brand-mark">
-              <Gamepad2 size={24} />
-            </span>
-            80<span className="brand-outline">90</span>
-            <sup>PLAY</sup>
-          </Link>
-        </div>
+      <header className="arcade-header">
+        <Link href="/" className="arcade-wordmark" aria-label="8090 home">
+          80<span>90</span>
+        </Link>
         <SearchBox />
-        <div className="header-actions">
+        <div className="arcade-header-actions">
+          <ContinuePlaying />
           <Link
-            href="/recent"
-            className="icon-button"
-            aria-label="Recently played"
+            href="/favorites"
+            className="arcade-favorites"
+            aria-label="My favorites"
           >
-            <History size={21} />
-          </Link>
-          <Link href="/favorites" className="library-button">
-            <Heart size={18} />
+            <Heart size={23} strokeWidth={1.7} />
             <span>My favorites</span>
           </Link>
         </div>
       </header>
-      <aside className="sidebar">
-        <div className="sidebar-top">
-          <span>YOUR PLAYGROUND</span>
-          <button
-            className="icon-button collapse-toggle"
-            disabled={!hydrated}
-            onClick={() => setCollapsed(!collapsed)}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            aria-expanded={!collapsed}
-          >
-            <ChevronLeft size={16} />
-          </button>
-        </div>
+      <aside className="arcade-rail">
+        <Link href="/" className="rail-brand" aria-label="8090 arcade home">
+          <span className="brand-mark">
+            <Gamepad2 size={24} strokeWidth={2.2} />
+          </span>
+        </Link>
         <nav aria-label="Main navigation">
           {nav("/", "Discover", "home")}
           {nav("/popular", "Popular", "popular")}
-          {nav("/new", "New releases", "new")}
+          {nav("/new", "New", "new")}
           {nav("/games", "All games", "games")}
-          <div className="nav-divider" />
-          <span className="nav-label">FIND YOUR MOOD</span>
-          {taxonomy
-            .filter((t) => !["Kids", "Educational", "Dress Up"].includes(t))
-            .map((t) =>
-              nav(`/category/${categorySlug(t)}`, t, categorySlug(t)),
-            )}
-          <div className="nav-divider" />
-          {nav("/favorites", "My favorites", "favorites")}
-          {nav("/recent", "Recently played", "recent")}
+          <div className="rail-divider" />
+          {nav("/favorites", "Favorites", "favorites", true)}
+          {nav("/recent", "Recent", "recent", true)}
         </nav>
-        <div className="sidebar-note">
-          <span className="tiny-led" /> LITTLE BREAKS.
-          <br />
-          <strong>BIG PLAY ENERGY.</strong>
-          <Link href="/about">
-            Meet your arcade <ArrowUpRight size={13} />
-          </Link>
-        </div>
       </aside>
-      {mobileOpen && (
-        <button
-          className="nav-backdrop"
-          aria-label="Close navigation"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
       <div className="content-wrap">
         <main id="main">{children}</main>
         <footer>
@@ -175,7 +117,10 @@ export function Shell({
               </Link>
             ))}
             <Link href="/admin">Studio</Link>
-            <PrivacySettings sitePermission={sitePermission} analyticsEnabled={analyticsEnabled} />
+            <PrivacySettings
+              sitePermission={sitePermission}
+              analyticsEnabled={analyticsEnabled}
+            />
           </nav>
           <small>
             © {new Date().getFullYear()} 8090 · Pick a game. Find your flow.
