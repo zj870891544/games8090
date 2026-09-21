@@ -56,6 +56,6 @@
 - [x] 代码检查、测试与生产构建。
 - [x] 2026-09-21 发布验证中，线上 GamePix 2048 方向键移动合并成功，得分由 12 增至 28；其它游戏不在该抽查结论内。
 
-发布状态：2026-09-21 改版曾部署，但发现 Cloudflare CPU 限制导致间歇性 1102，已回退线上版本。视觉验收结论与运行发布状态分别记录，详见 `docs/redesign-deployment-2026-09-21.md`。
+发布状态：2026-09-21 首次 SSR 发布因 Cloudflare CPU 限制回退；用户随后选择免费静态发布，现已用 Cloudflare Pages 上线同一新版界面。正式站连续加载与 2048 实玩通过，详见 `docs/static-publishing.md`。首次回退历史见 `docs/redesign-deployment-2026-09-21.md`。
 
 final result: passed

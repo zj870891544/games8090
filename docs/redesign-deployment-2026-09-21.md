@@ -1,5 +1,7 @@
 # 2026-09-21 界面改版发布与回退
 
+后续进展：用户选择保持免费，已完成公开页面静态化并上线。当前发布方式与验收见 [静态发布说明](static-publishing.md)。以下保留首次 SSR 发布回退的历史记录。
+
 - 网站：<https://games8090.online/>。
 - 应用代码提交：`2ba17ca`，已推送至 `origin/master`。
 - Cloudflare Worker：`8090-night-arcade`。

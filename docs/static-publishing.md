@@ -62,3 +62,16 @@ www 由现有轻量跳转逻辑返回 308 到主域名，不进入 SSR。`/_next
 静态版本出问题时，在 Pages 项目的部署记录回滚至上一静态成功版本；不需要回退数据库。首次切换前的 Worker 恢复版本为 `fe5a64b9-c920-43c1-ba49-2a127697a9dc`，但恢复公开 SSR 会重新面临免费 CPU 限制，不作为长期方案。
 
 官方依据：[Pages 静态页面服务](https://developers.cloudflare.com/pages/configuration/serving-pages/)、[Pages 响应头](https://developers.cloudflare.com/pages/configuration/headers/)、[Pages 费用](https://developers.cloudflare.com/pages/functions/pricing/)。
+
+## 2026-09-21 上线验收
+
+- 代码提交 `60b0c18` 已推送 `origin/master`。手动 Pages 发布 `4f361109-076c-449b-9d81-1353ff6ba74b` 成功；随后 Git 自动构建 `5bc8309b-1eee-49ee-a1ee-c7322f6ebcf4` 成功，API 确认 `uses_functions: false`。
+- 后台 Worker 版本 `43fa4fe3-8b69-45cb-8b60-91bdec835e85` 已生效；API 确认公开 apex 通配路由已移除，只保留上文列出的五条路由。
+- ESLint、TypeScript、65 项测试、后台生产构建和静态构建通过。
+- 正式域名首页、列表、独立第二页、Puzzle 分类、2048/蛋糕合并详情、搜索、收藏、中文登录、robots、sitemap、release.json 均 HTTP 200。不存在的游戏和演示播放器返回 404。
+- 正式列表从 60 连续加载到 120、180 款；精确搜索 2048 排首位并进入详情。预览站验证收藏跨页面保留。公开 `/api/games` 已为 404，浏览器列表和搜索仍正常运行。
+- 2048 加载真实 GamePix 棋盘，方向键触发移动与合并，得分由 28 增至 56；没有将仅显示播放器外壳算作游戏验证。其他 774 款未逐一实玩。
+- 首页 JS/CSS 与静态目录返回 200；目录使用内容哈希与 immutable 缓存。列表连续八次 HTTP 请求全为 200。www 路径/参数完整 308 跳转，未登录后台 303 跳转。
+- 原 GA/GSC/Bing 标记、CSP 和安全响应头仍在；未变更付费订阅、数据库数据或供应商密钥。
+
+本地验证证据：`output/static-deployment-2026-09-21/`，含 HTTP 检查、Cloudflare 发布/路由快照、首页和 2048 实玩截图。该目录按仓库规则不提交。
